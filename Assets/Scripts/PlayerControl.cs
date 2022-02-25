@@ -1,15 +1,33 @@
 using System.Collections;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerControl : MonoBehaviour
 {
+
+	public GameObject GameManagerGO;
+
 	public GameObject PlayerBullet;
 	public GameObject BulletPosition01;
 	public GameObject BulletPosition02;
 	public GameObject Explosion;
 
+	public Text LivesUIText;
+
+	const int MaxLives = 3;
+	int lives;
+
 	public float speed;
+
+	public void Init()
+    {
+		lives = MaxLives;
+
+		LivesUIText.text = lives.ToString();
+
+		gameObject.SetActive(true);
+    }
 
 	// Use this for initialization
 	void Start()
@@ -72,7 +90,15 @@ public class PlayerControl : MonoBehaviour
         {
 			PlayExplosion();
 
-			Destroy(gameObject);
+			lives--;
+			LivesUIText.text = lives.ToString();
+
+			if (lives == 0)
+			{
+                GameManagerGO.GetComponent<GameManager>().SetGameManagerState(GameManager.GameManagerState.GameOver);
+
+				gameObject.SetActive(false);
+			}
         }
     }
 
